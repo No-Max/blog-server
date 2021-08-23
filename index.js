@@ -8,6 +8,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
+app.use(express.json())
 
 app.get("/posts", (req, res) => {
   const postsWithUserNames = posts.map(post => {
@@ -28,7 +29,14 @@ app.get("/posts/:id", (req, res) => {
 });
 
 app.post("/posts", (req, res) => {
-  res.send(posts);
+  const newPost = {
+    id: posts.length + 1,
+    ...req.body,
+    views: 0,
+    date: new Date(),
+  };
+  posts.push(newPost);
+  res.send(newPost);
 });
 
 app.listen(port, () => {
