@@ -32,6 +32,7 @@ app.post("/posts", (req, res) => {
   const newPost = {
     id: posts.length + 1,
     ...req.body,
+    likes: 0,
     views: 0,
     date: new Date(),
   };
