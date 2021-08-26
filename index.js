@@ -28,6 +28,20 @@ app.get("/posts/:id", (req, res) => {
   res.send(posts[req.params.id]);
 });
 
+app.delete("/posts/:id", (req, res) => {
+  const index = posts.findIndex(post => post.id === parseInt(req.params.id, 10));
+  if (index !== -1) {
+    posts.splice(index, 1);
+  }
+  const postsWithUserNames = posts.map(post => {
+    return {
+      ...post,
+      userName: users.find(user => user.id === post.userId).name
+    }
+  })
+  res.send(postsWithUserNames);
+});
+
 app.post("/posts", (req, res) => {
   const newPost = {
     id: posts.length + 1,
@@ -37,7 +51,10 @@ app.post("/posts", (req, res) => {
     date: new Date(),
   };
   posts.push(newPost);
-  res.send(newPost);
+  res.send({
+    ...newPost,
+    userName: users.find(user => user.id === newPost.userId).name
+  });
 });
 
 app.listen(port, () => {
